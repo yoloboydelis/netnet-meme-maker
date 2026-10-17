@@ -86,12 +86,15 @@ function addText(str='YOUR TEXT', pos='middle', select=true){
   canvas.add(t); const p=t.getPointByOrigin('left','top'); t.set({originX:'left',originY:'top',left:p.x,top:p.y}); t.setCoords();
   if(select){canvas.setActiveObject(t);} canvas.requestRenderAll(); return t;
 }
+function fitText(t,maxLines=2){ t.initDimensions(); let g=0; while(t._textLines.length>maxLines && t.fontSize>22 && g++<30){ t.set('fontSize',Math.round(t.fontSize*0.92)); t.set('strokeWidth',Math.max(2,Math.round(t.fontSize/11))); t.initDimensions(); } }
+const DEFAULTS=['TOP TEXT','BOTTOM TEXT','YOUR TEXT'];
 function addDefaultTexts(){ addText('TOP TEXT','top',false); addText('BOTTOM TEXT','bottom',false); canvas.discardActiveObject(); canvas.requestRenderAll(); }
 function randomCaption(){
   const [a,b]=NN_CAPTIONS[Math.floor(Math.random()*NN_CAPTIONS.length)];
   let ts=textObjs().sort((x,y)=>x.top-y.top);
-  if(ts.length<2){ ts.forEach(t=>canvas.remove(t)); addText(a,'top',false); addText(b,'bottom',false); }
-  else { ts[0].set('text',ts[0].caps?a.toUpperCase():a); const last=ts[ts.length-1]; const bottomEdge=last.top+last.getScaledHeight(); last.set('text',last.caps?b.toUpperCase():b); last.initDimensions(); if(bottomEdge>baseH*0.8){last.top=bottomEdge-last.getScaledHeight();} last.setCoords(); ts[0].setCoords(); }
+  if(ts.length<2){ ts.forEach(t=>canvas.remove(t)); fitText(addText(a,'top',false)); const bt=addText(b,'bottom',false); fitText(bt); bt.top=baseH*0.97-bt.getScaledHeight(); bt.setCoords(); }
+  else { ts[0].set('text',ts[0].caps?a.toUpperCase():a); fitText(ts[0]); const last=ts[ts.length-1]; const bottomEdge=last.top+last.getScaledHeight(); last.set('text',last.caps?b.toUpperCase():b); fitText(last); if(bottomEdge>baseH*0.8){last.top=bottomEdge-last.getScaledHeight();} last.setCoords(); ts[0].setCoords(); }
+  textObjs().forEach(t=>{ if(t.top+t.getScaledHeight()>baseH){ t.top=Math.max(0,baseH-t.getScaledHeight()-baseH*0.02); t.setCoords(); } });
   canvas.discardActiveObject(); canvas.requestRenderAll(); snapshot(); syncProps();
 }
 
@@ -133,6 +136,7 @@ async function useTemplate(t,scroll=true){
   loading(true,'Loading template…');
   try{
     const pk=await getPack(t.pack); const b64=pk[t.id]; if(!b64) throw new Error('missing');
+    if(t.cat==='remix') textObjs().filter(o=>DEFAULTS.includes(o.text)).forEach(o=>canvas.remove(o));
     await setBackground('data:image/webp;base64,'+b64);
     if(t.cat==='blank' && !textObjs().length) addDefaultTexts();
     if(scroll&&window.innerWidth<760) $('#canvasWrap').scrollIntoView({behavior:'smooth',block:'center'});
