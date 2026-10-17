@@ -263,7 +263,7 @@ async function generateAI(){
     aiPool=base.concat(caps);
     currentTpl='ai'; capIdx=0;
     fillCaption(nextCaption(),true);
-    say(pasted?'Done! The likeness engine was busy, so Dunlap was added as a cutout — drag/resize him. Tap 🎲 Caption idea for more captions.':'Done! Tap 🎲 Caption idea for more captions, edit text, then download.');
+    say(pasted?(engine==='paste'?'Done! Dunlap was added as a cutout — drag/resize him.':'Done! The likeness engine was busy, so Dunlap was added as a cutout — drag/resize him.')+' Tap 🎲 Caption idea for more captions.':'Done! Tap 🎲 Caption idea for more captions, edit text, then download.');
     toast('Al Dunlap scene ready ✍️');
     if(window.innerWidth<760) $('#canvasWrap').scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){ console.error(e); say('The free AI services are overloaded right now. Wait a minute and try again, or use a template.'); toast('AI busy — try again in a minute'); }
