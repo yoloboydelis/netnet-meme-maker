@@ -37,11 +37,11 @@
       <button class="btn ghost w100" id="btnBlankCanvas">⬛ Start from a blank black canvas</button>
     </section>
     <section class="tab" id="tab-ai">
-      <p class="hint">Type an idea. We add Al Dunlap automatically (slick black hair, dark suit, black tie, smug look). Free, no account, no key.</p>
+      <p class="hint">Type an idea. Every scene stars the real Al Dunlap — we feed his face to a free AI likeness engine — and you get matching captions automatically. Free, no account, no key.</p>
       <textarea id="aiIdea" class="input" rows="3" placeholder="e.g. Dunlap calmly playing golf on the moon while bears cry in the background"></textarea>
       <div class="row">
         <select id="aiStyle" class="input">
-          <option value="photorealistic cinematic film still, dramatic lighting, premium black and gold color grade">Cinematic photo</option>
+          <option value="cinematic photo, dramatic lighting, premium black and gold color grade">Cinematic photo</option>
           <option value="classic oil painting, gilded frame lighting, old masters style">Oil painting</option>
           <option value="anime key visual, vibrant, detailed">Anime</option>
           <option value="american cartoon style, bold outlines, flat colors">Cartoon</option>
@@ -55,10 +55,14 @@
           <option value="768x1152">Portrait</option>
         </select>
       </div>
+      <select id="aiEngine" class="input">
+        <option value="auto">Real Dunlap face (best, 15–60s)</option>
+        <option value="paste">Quick: scene + Dunlap cutout</option>
+      </select>
       <button class="btn gold w100" id="btnAI">✨ Generate scene</button>
       <button class="btn ghost w100" id="btnAIIdea">🎲 Random scene idea</button>
       <div id="aiStatus" class="hint"></div>
-      <p class="tiny">Powered by the free Pollinations image API. It can be slow or busy at peak times; we retry automatically. AI faces vary — add a Dunlap face sticker for a perfect likeness.</p>
+      <p class="tiny">Likeness engine: PuLID-FLUX on a free Hugging Face Space (shared GPU, daily free quota per visitor). If it's busy we fall back to Pollinations + a Dunlap cutout. Captions by Pollinations text AI.</p>
     </section>
     <section class="tab" id="tab-stickers">
       <p class="hint">Tap a sticker to add it. Drag, pinch the corners to resize, use the top handle to rotate.</p>
@@ -123,6 +127,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 <script src="faces.js"></script>
 <script src="content.js"></script>
+<script src="captions.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
