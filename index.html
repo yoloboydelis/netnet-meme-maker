@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Netnet Meme Maker · Al Dunlap memes for $NET</title>
+<meta name="description" content="Free Netnet Capital meme maker. Pick an Al Dunlap template or generate one with AI, add captions, download, post. #NetNet $NET">
+<meta property="og:title" content="Netnet Meme Maker">
+<meta property="og:description" content="Free Al Dunlap meme generator for the Netnet community. #NetNet $NET">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23d4af37'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' font-family='Georgia' font-weight='bold' fill='%23111'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Bangers&family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="coin">N</span><div><b>NETNET</b> MEME MAKER<small>Al Dunlap · the rock of the Netnet ecosystem</small></div></div>
+  <a class="xlink" href="https://x.com/NetNetCap" target="_blank" rel="noopener">@NetNetCap</a>
+</header>
+
+<main class="app">
+  <aside class="left panel">
+    <nav class="tabs" id="tabs">
+      <button data-tab="templates" class="on">🖼️ Templates</button>
+      <button data-tab="ai">✨ AI</button>
+      <button data-tab="stickers">🪙 Stickers</button>
+      <button data-tab="upload">⬆️ Upload</button>
+    </nav>
+    <section class="tab on" id="tab-templates">
+      <div class="seg" id="tplFilter">
+        <button data-cat="blank" class="on">Blank scenes</button>
+        <button data-cat="remix">Remix captioned</button>
+      </div>
+      <input id="tplSearch" class="input" placeholder="Search templates… (bear, vault, jet)">
+      <div class="grid" id="tplGrid"></div>
+      <button class="btn ghost w100" id="btnBlankCanvas">⬛ Start from a blank black canvas</button>
+    </section>
+    <section class="tab" id="tab-ai">
+      <p class="hint">Type an idea. We add Al Dunlap automatically (slick black hair, dark suit, black tie, smug look). Free, no account, no key.</p>
+      <textarea id="aiIdea" class="input" rows="3" placeholder="e.g. Dunlap calmly playing golf on the moon while bears cry in the background"></textarea>
+      <div class="row">
+        <select id="aiStyle" class="input">
+          <option value="photorealistic cinematic film still, dramatic lighting, premium black and gold color grade">Cinematic photo</option>
+          <option value="classic oil painting, gilded frame lighting, old masters style">Oil painting</option>
+          <option value="anime key visual, vibrant, detailed">Anime</option>
+          <option value="american cartoon style, bold outlines, flat colors">Cartoon</option>
+          <option value="16-bit pixel art video game scene">Pixel art</option>
+          <option value="comic book panel, halftone, bold ink">Comic book</option>
+          <option value="3d render, pixar style, soft lighting">3D animated</option>
+        </select>
+        <select id="aiSize" class="input">
+          <option value="1280x720">Landscape</option>
+          <option value="1024x1024">Square</option>
+          <option value="768x1152">Portrait</option>
+        </select>
+      </div>
+      <button class="btn gold w100" id="btnAI">✨ Generate scene</button>
+      <button class="btn ghost w100" id="btnAIIdea">🎲 Random scene idea</button>
+      <div id="aiStatus" class="hint"></div>
+      <p class="tiny">Powered by the free Pollinations image API. It can be slow or busy at peak times; we retry automatically. AI faces vary — add a Dunlap face sticker for a perfect likeness.</p>
+    </section>
+    <section class="tab" id="tab-stickers">
+      <p class="hint">Tap a sticker to add it. Drag, pinch the corners to resize, use the top handle to rotate.</p>
+      <div class="stickers" id="stickerGrid"></div>
+    </section>
+    <section class="tab" id="tab-upload">
+      <p class="hint">Use your own image. Nothing is uploaded to any server — it stays in your browser.</p>
+      <label class="btn gold w100 file">🖼️ Upload as background<input type="file" id="upBg" accept="image/*"></label>
+      <label class="btn ghost w100 file">➕ Add image as sticker/layer<input type="file" id="upLayer" accept="image/*"></label>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <div class="toolbar">
+      <button class="btn gold" id="btnText">＋ Text</button>
+      <button class="btn" id="btnCaption">🎲 Caption idea</button>
+      <button class="btn icon" id="btnUndo" title="Undo">↶</button>
+      <button class="btn icon" id="btnRedo" title="Redo">↷</button>
+      <button class="btn icon" id="btnUp" title="Bring forward">⬆</button>
+      <button class="btn icon" id="btnDown" title="Send backward">⬇</button>
+      <button class="btn icon" id="btnDup" title="Duplicate">⿻</button>
+      <button class="btn icon danger" id="btnDel" title="Delete">🗑</button>
+    </div>
+    <div class="canvasWrap" id="canvasWrap"><canvas id="c"></canvas><div class="loading" id="loading"><div class="spin"></div><span id="loadingText">Loading…</span></div></div>
+    <div class="exportbar">
+      <label class="toggle"><input type="checkbox" id="wm" checked> Watermark</label>
+      <button class="btn gold big" id="btnDownload">⬇ Download PNG</button>
+      <button class="btn big" id="btnShare">𝕏 Share</button>
+    </div>
+    <p class="tiny center">Memes only — not financial advice. Fan-made tool for the Netnet community.</p>
+  </section>
+
+  <aside class="right panel" id="props">
+    <h3>Selected layer</h3>
+    <div id="propsEmpty" class="hint">Tap a text or sticker on the canvas to edit it. Tap <b>＋ Text</b> to add a caption.</div>
+    <div id="propsText" class="hidden">
+      <textarea id="pText" class="input" rows="3"></textarea>
+      <div class="row">
+        <select id="pFont" class="input">
+          <option value="Impact, Anton, sans-serif">Impact (classic)</option><option value="Anton">Anton</option><option value="Bebas Neue">Bebas Neue</option>
+          <option value="Bangers">Bangers</option><option value="Playfair Display">Playfair (premium)</option><option value="Inter">Inter</option><option value="Arial Black">Arial Black</option>
+        </select>
+        <label class="mini">Caps<input type="checkbox" id="pCaps" checked></label>
+      </div>
+      <label class="lbl">Size <input type="range" id="pSize" min="12" max="160"></label>
+      <div class="row">
+        <label class="lbl">Fill <input type="color" id="pFill"></label>
+        <label class="lbl">Outline <input type="color" id="pStroke"></label>
+        <label class="lbl">Width <input type="range" id="pStrokeW" min="0" max="16"></label>
+      </div>
+      <div class="swatches" id="swatches"></div>
+      <div class="seg" id="pAlign"><button data-a="left">Left</button><button data-a="center">Center</button><button data-a="right">Right</button></div>
+    </div>
+    <div id="propsCommon" class="hidden">
+      <label class="lbl">Scale <input type="range" id="pScale" min="5" max="400"></label>
+      <label class="lbl">Rotate <input type="range" id="pRot" min="-180" max="180"></label>
+      <label class="lbl">Opacity <input type="range" id="pOpacity" min="10" max="100"></label>
+    </div>
+  </aside>
+</main>
+<div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<script src="faces.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
